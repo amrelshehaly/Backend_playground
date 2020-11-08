@@ -1,0 +1,23 @@
+{
+  "name": "backend_playground",
+  "version": "1.0.0",
+  "description": "My Playgouund Node.js Project ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amrelshehaly/Backend_playground.git"
+  },
+  "author": "Amr Elshehaly",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amrelshehaly/Backend_playground/issues"
+  },
+  "homepage": "https://github.com/amrelshehaly/Backend_playground#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.10.12"
+  }
+}
