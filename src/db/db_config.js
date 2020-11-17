@@ -1,7 +1,9 @@
 // const mongoose = require('mongoose')
 const MongoClient = require('mongodb').MongoClient
+require('dotenv').config()
 
-const uri = "mongodb+srv://admin:admin@cluster0.y8uvd.mongodb.net/Database_1?retryWrites=true&w=majority";
+
+const uri = process.env.DATABASE_URL;
 // const client = new MongoClient(uri, { useNewUrlParser: true });
 
 // mongoose.connect(uri,

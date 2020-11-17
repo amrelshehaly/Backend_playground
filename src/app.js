@@ -2,6 +2,9 @@ const express = require('express')
 const mongoose = require('mongoose')
 const multer = require('multer')
 
+require('dotenv').config()
+
+
 // const User = require('./models/user') 
 const UserRouter = require('./routes/user')
 
@@ -34,7 +37,7 @@ app.post('/upload', upload.single('upload'),  (req,res)=>{
 })
 
 app.use(express.json())
-mongoose.connect("mongodb+srv://admin:admin@cluster0.y8uvd.mongodb.net/Database_1?retryWrites=true&w=majority", {
+mongoose.connect(process.env.DATABASE_URL, {
   useNewUrlParser: true, 
   useUnifiedTopology: true, 
   useCreateIndex:true
