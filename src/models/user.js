@@ -31,6 +31,11 @@ const schema = new mongoose.Schema({
             }
         }
     },
+    time : { 
+
+        type : Date, 
+        default: Date.now 
+    },
     password : {
         type:String,
         required: true,
@@ -53,6 +58,15 @@ const schema = new mongoose.Schema({
         type: Buffer
     }
 })
+
+schema.methods.toJSON = function(){
+    const user = this
+    const userObject = user.toObject()
+
+    delete userObject.password
+    delete userObject.tokens
+    delete userObject.avatar
+}
 
 schema.methods.generateAuthToken = async function () {
     const  user =this;
