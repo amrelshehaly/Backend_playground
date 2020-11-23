@@ -1,10 +1,13 @@
 const express = require('express')
 const User = require('../models/user')
 const router = new express.Router()
-const {sendWelcomeEmail} = require('../emails/account')
+const {sendWelcomeMail} = require('../emails/account')
 const auth = require('../middleware/auth')
 
 const multer = require('multer')
+
+const verification = require('../models/verification')
+const crypto = require('crypto')
 
 
 router.get('/users',async (req, res) => {
@@ -20,13 +23,34 @@ router.get('/users',async (req, res) => {
   router.post('/users' , async (req,res)=>{
     const user = new User (req.body)
      try{
+       const rand = crypto.randomBytes(16).toString('hex')
+        await sendWelcomeMail(user.email, user.name , rand)
+        const Verification = new verification({_userid: user._id, hash: rand })
+        await Verification.save()
         await user.save()
-        sendWelcomeEmail(user.email, user.name)
         const token = await  user.generateAuthToken()
         res.status(201).send({user , token})
      }catch (e){
         res.status(400).send(e)
      }
+  })
+
+  router.get('/verify',async(req,res)=>{
+    try {
+      const hash = req.query.val
+      // console.log(hash)
+
+      const code = await verification.findOne({hash: hash})
+      // console.log("code:", code)
+
+      if(code){
+        res.status(200).send(code)
+      }
+    } catch (error) {
+      res.status(404).send("The Expiry time has reached. PLease signup again")
+    }
+    
+
   })
 
   router.post('/users/login',  async (req,res)=>{
