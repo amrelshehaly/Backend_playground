@@ -31,6 +31,7 @@ router.get('/users',async (req, res) => {
         const token = await  user.generateAuthToken()
         res.status(201).send({user , token})
      }catch (e){
+       console.log("Problem signing up")
         res.status(400).send(e)
      }
   })
@@ -45,6 +46,7 @@ router.get('/users',async (req, res) => {
 
       if(code){
         res.status(200).send(code)
+        await verification.findByIdAndDelete(code._id)
       }
     } catch (error) {
       res.status(404).send("The Expiry time has reached. PLease signup again")
