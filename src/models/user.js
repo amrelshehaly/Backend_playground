@@ -56,6 +56,10 @@ const schema = new mongoose.Schema({
     }],
     avatar :{
         type: Buffer
+    },
+    googleId :{
+        type : String,
+        trim :true
     }
 })
 

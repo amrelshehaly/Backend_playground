@@ -5,6 +5,7 @@ const multer = require('multer')
 require('dotenv').config()
 
 const UserRouter = require('./routes/user')
+const googleRouter = require('./auth/google-auth')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -46,6 +47,12 @@ mongoose.connect(process.env.DATABASE_URL, {
 });
 
 app.use(UserRouter)
+app.use(googleRouter)
+
+// console.log(__dirname)
+// app.get('/test',(req,res)=>{
+//   res.sendFile('google4343c0868a21c353.html',{root: __dirname })
+// })
 
 app.listen(port , ()=>{
     console.log('Server is listening to port ,', port)
