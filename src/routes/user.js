@@ -178,17 +178,17 @@ router.delete('/users/me/avatar', auth, async (req,res)=>{
   res.status(200).send()
 })
 
-router.get('/users/:id/avatar', async (req,res)=>{
+router.get('/users/avatar', auth , async (req,res)=>{
   try {
-    const user = await User.findById(req.params.id)
+    // const user = await User.findById(req.user.id)
     // console.log(user.email)
 
-    if(!user || !user.avatar){
+    if(!req.user || !req.user.avatar){
       throw new Error('Error getting image')
     }
 
     res.set('Content-Type','image/jpg')
-    res.send(user.avatar)
+    res.send(req.user.avatar)
 
   } catch (error) {
     res.status(404).send()

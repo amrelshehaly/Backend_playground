@@ -1,13 +1,26 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const multer = require('multer')
+var cors = require('cors')
+const path = require('path')
+const http = require('http')
+const publicDirectoryPath = path.join(__dirname,'../public')
+const socketio = require('socket.io')
+const Filter = require('bad-words')
+const { generateMessage } =  require('./utils/messages')
 
 require('dotenv').config()
 
 const UserRouter = require('./routes/user')
 const googleRouter = require('./auth/google-auth')
 
+
 const app = express()
+app.use(cors())
+app.use(express.static(publicDirectoryPath))
+
+const server = http.createServer(app)
+const io = socketio(server)
 const port = process.env.PORT || 3000
 
 // const upload = multer({
@@ -49,11 +62,36 @@ mongoose.connect(process.env.DATABASE_URL, {
 app.use(UserRouter)
 app.use(googleRouter)
 
-// console.log(__dirname)
-// app.get('/test',(req,res)=>{
-//   res.sendFile('google4343c0868a21c353.html',{root: __dirname })
-// })
+io.on('connection',(socket)=>{
+  console.log("New web Socket connection")
 
-app.listen(port , ()=>{
+  socket.emit("message" , generateMessage ('Welcome'))
+  socket.broadcast.emit('message', generateMessage("A new User has Joined!!"))
+
+  socket.on('FEmessage',(msg)=>{
+    console.log(msg)
+    socket.broadcast.emit('message-broadcast',msg)
+  })
+
+  socket.on('sendMessage',(message , callback)=>{
+    console.log(message)
+    const filter = new Filter()
+
+    if(filter.isProfane(message)){
+      return callback(' Profanity is not allowed')
+    }
+
+    io.emit('message',message)
+    callback()
+  })
+
+  socket.on('disconnect', ()=>{
+    io.emit('message', "User has left ")
+  })
+  
+})
+
+
+server.listen(port , ()=>{
     console.log('Server is listening to port ,', port)
 })

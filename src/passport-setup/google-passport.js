@@ -35,7 +35,7 @@ const UserExist = async (email) =>{
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/callback"
+    callbackURL: `${process.env.DOMAIN_NAME}/auth/google/callback`
   },
    function (accessToken, refreshToken, profile, done){
      User.findOne({ email: profile.emails[0].value }, async function (err, user) {
@@ -48,23 +48,22 @@ passport.use(new GoogleStrategy({
             const user = new User ({
                 name : profile.displayName,
                 email : profile.emails[0].value,
-                password : crypto.randomBytes(16).toString('hex'),
                 googleId : profile.id,
+                password : "",
                 avatar : profile.photos[0].value
             })
 
-            await sendWelcomeMail(user.email, user.name , rand)
-            const verify = new verification({_userid: user._id, hash: rand })
-            await verify.save()
-            await  user.generateAuthToken()
+            // await sendWelcomeMail(user.email, user.name , rand)
+            // const verify = new verification({_userid: user._id, hash: rand })
+            // await verify.save()
+            const token =  await  user.generateAuthToken()
             await user.save()
 
-            return done (null, user)
-
-
+            return done (null, {user , token})
         }
 
-        return done(null, user);
+        const token = await user.generateAuthToken()
+        return done(null, {user, token});
     });
 
 

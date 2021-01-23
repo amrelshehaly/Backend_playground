@@ -3,6 +3,7 @@ const validator = require('validator')
 
 const jwt = require('jsonwebtoken')
 const bycrpt = require('bcryptjs')
+require('dotenv').config()
 
 const schema = new mongoose.Schema({
     name :{
@@ -38,7 +39,7 @@ const schema = new mongoose.Schema({
     },
     password : {
         type:String,
-        required: true,
+        // required: true,
         trim : true,
         minlenght : 7,
         validate(value){
@@ -55,7 +56,7 @@ const schema = new mongoose.Schema({
         }
     }],
     avatar :{
-        type: Buffer
+        type: Buffer,
     },
     googleId :{
         type : String,
@@ -76,7 +77,7 @@ schema.methods.toJSON = function(){
 
 schema.methods.generateAuthToken = async function () {
     const  user =this;
-    const token = jwt.sign({_id : user._id.toString() }, 'Thisissparta')
+    const token = jwt.sign({_id : user._id.toString() }, process.env.JWT_VERIFICATION)
 
     user.tokens = user.tokens.concat({token : token})
 
@@ -105,9 +106,12 @@ schema.pre('save', async function(next){
     
     const user = this
     
-    if(user.isModified('password')){
-        user.password = await bycrpt.hash(user.password, 8)
+    if (user.password.length > 0) {
+        if(user.isModified('password')){
+            user.password = await bycrpt.hash(user.password, 8)
+        }
     }
+        
 
     next()
 })

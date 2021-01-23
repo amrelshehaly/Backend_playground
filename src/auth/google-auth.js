@@ -2,6 +2,7 @@ const express = require('express')
 const router = new express.Router()
 const passport = require('passport')
 const isLoogedIn = require('./google-middleware')
+const auth = require('../middleware/auth')
 const cookieSession = require('cookie-session')
 
 require('../passport-setup/google-passport')
@@ -20,28 +21,26 @@ router.get('/failed', (req,res)=>{
     res.send('you failed to login')
 })
 
-router.get('/good', isLoogedIn ,(req,res)=>{
-    // console.log(req.user)
-    res.send(`welcome mr ${req.user.name}`)
-})
-
-
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/auth/google/callback',  passport.authenticate('google', { failureRedirect: '/failed' }),
-function(req, res) {
+ function(req, res) {
   // Successful authentication, redirect home.
-  res.redirect('/good');
+
+    if(req.user){
+        // console.log(req)
+        res.status(200).send({ user :req.user.user , token : req.user.token})
+    }else{
+        res.status(404).send("NO USER IS THERE")
+    }
+  
 });
 
-router.get('/google/logout' , async (req,res)=>{
+router.get('/google/logout', async (req,res)=>{
+    console.log(req.headers.authorization)
     req.session = null
     await req.logout()
-    res.redirect('/bye')
-})
-
-router.get('/bye', (req,res)=>{
-    res.send('You are now logged out')
+    res.redirect('/')
 })
 
 
