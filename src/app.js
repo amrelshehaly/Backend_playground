@@ -13,10 +13,15 @@ require('dotenv').config()
 
 const UserRouter = require('./routes/user')
 const googleRouter = require('./auth/google-auth')
+// const videochatRouter = require('./routes/video-chat')
 
+var corsOptions = {
+  origin: 'https://upbeat-bohr-db3c71.netlify.app',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 const app = express()
-app.use(cors())
+app.use(cors(corsOptions))
 app.use(express.static(publicDirectoryPath))
 
 const server = http.createServer(app)
@@ -61,6 +66,7 @@ mongoose.connect(process.env.DATABASE_URL, {
 
 app.use(UserRouter)
 app.use(googleRouter)
+// app.use(videochatRouter)
 
 io.on('connection',(socket)=>{
   console.log("New web Socket connection")
@@ -72,6 +78,12 @@ io.on('connection',(socket)=>{
     console.log(msg)
     socket.broadcast.emit('message-broadcast',msg)
   })
+
+  // socket.on('join-room', (roomId, userId) =>{
+  //   console.log(roomId, userId)
+  //   socket.join(roomId)
+  //   socket.to(roomId).broadcast.emit('user-connected', userId)
+  // })
 
   socket.on('sendMessage',(message , callback)=>{
     console.log(message)

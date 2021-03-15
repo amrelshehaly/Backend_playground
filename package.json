@@ -34,6 +34,7 @@
     "passport-google-oauth20": "^2.0.0",
     "socket.io": "^3.0.3",
     "stripe": "^8.126.0",
+    "uuid": "^8.3.2",
     "validator": "^13.1.17"
   },
   "devDependencies": {
