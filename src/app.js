@@ -15,13 +15,13 @@ const UserRouter = require('./routes/user')
 const googleRouter = require('./auth/google-auth')
 // const videochatRouter = require('./routes/video-chat')
 
-var corsOptions = {
-  origin: 'https://upbeat-bohr-db3c71.netlify.app',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
+// var corsOptions = {
+//   origin: 'https://upbeat-bohr-db3c71.netlify.app',
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// }
 
 const app = express()
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(express.static(publicDirectoryPath))
 
 const server = http.createServer(app)
