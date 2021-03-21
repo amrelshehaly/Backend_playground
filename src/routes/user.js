@@ -24,7 +24,7 @@ router.get('/users',async (req, res) => {
     const user = new User (req.body)
      try{
        const rand = crypto.randomBytes(16).toString('hex')
-        await sendWelcomeMail(user.email, user.name , rand)
+        // await sendWelcomeMail(user.email, user.name , rand)
         const Verification = new verification({_userid: user._id, hash: rand })
         await Verification.save()
         await user.save()
