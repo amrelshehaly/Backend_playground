@@ -80,7 +80,7 @@ router.get('/users',async (req, res) => {
         })
 
         await req.user.save()
-        res.send()
+        res.status(200).send()
     } catch (error) {
         res.status(500).send()
     }

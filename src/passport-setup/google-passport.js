@@ -35,7 +35,7 @@ const UserExist = async (email) =>{
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: `${process.env.DOMAIN_NAME}/auth/google/callback`
+    callbackURL: `http://shehaly-studio.herokuapp.com/auth/google/callback`
   },
    function (accessToken, refreshToken, profile, done){
      User.findOne({ email: profile.emails[0].value }, async function (err, user) {
