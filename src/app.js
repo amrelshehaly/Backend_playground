@@ -15,19 +15,19 @@ const UserRouter = require('./routes/user')
 const googleRouter = require('./auth/google-auth')
 // const videochatRouter = require('./routes/video-chat')
 
-var allowlist = ['https://upbeat-bohr-db3c71.netlify.app', process.env.FRONTDEV_DOMAIN]
-var corsOptionsDelegate = function (req, callback) {
-  var corsOptions;
-  if (allowlist.indexOf(req.header('Origin')) !== -1) {
-    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
-  } else {
-    corsOptions = { origin: false } // disable CORS for this request
-  }
-  callback(null, corsOptions) // callback expects two parameters: error and options
-}
+// var allowlist = ['https://upbeat-bohr-db3c71.netlify.app', process.env.FRONTDEV_DOMAIN]
+// var corsOptionsDelegate = function (req, callback) {
+//   var corsOptions;
+//   if (allowlist.indexOf(req.header('Origin')) !== -1) {
+//     corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+//   } else {
+//     corsOptions = { origin: false } // disable CORS for this request
+//   }
+//   callback(null, corsOptions) // callback expects two parameters: error and options
+// }
 
 const app = express()
-app.use(cors(corsOptionsDelegate))
+app.use(cors({origin: 'https://upbeat-bohr-db3c71.netlify.app'}))
 app.use(express.static(publicDirectoryPath))
 
 const server = http.createServer(app)
